@@ -4,4 +4,4 @@ pandas
 numpy
 datetime
 altair
-scipy.stats
+scipy
