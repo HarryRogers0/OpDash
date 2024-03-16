@@ -143,6 +143,11 @@ st.title("Options Analysis Dashboard")
 st.write("A Basic Dashboard that when given a Ticker and American Option Expiry will calculate the Black-Scholes-Merton price of the option as well as the binomial tree price.")
 ticker = st.text_input("ticker", value = "SPY")
 Symbol = yf.Ticker(ticker)
+# Download historical data in order to find volatility
+historicals_5y = Symbol.history(period="5y")
+historicals_1y = Symbol.history(period="1y")
+st.write("Stock Price over 5 Years")
+st.line_chart(historicals_5y['Close'])
 
 expiry_data = Symbol.options
 expiry = st.selectbox("Select an expiry ", expiry_data)
@@ -171,14 +176,11 @@ st.write("## Derivative Pricing Basic Models")
 Decision1 = st.radio("Put or Call?", ('Put', 'Call'), horizontal=True)
 Decision2 = st.radio("Analyse against Black-Scholes-Merton or Binomial Tree", ('Black-Scholes-Merton', 'Binomial Tree'))
 
-# Download historical data in order to find volatility
-historicals = Symbol.history(period="1y")
-
 # Calculate daily returns
-historicals['Daily Return'] = historicals['Close'].pct_change()
+historicals_1y['Daily Return'] = historicals_1y['Close'].pct_change()
 
 # Calculate annualized volatility
-volatility = historicals['Daily Return'].std() * np.sqrt(252)  # 252 trading days in a year
+volatility = historicals_1y['Daily Return'].std() * np.sqrt(252)  # 252 trading days in a year
 
 #st.write(volatility)
 
@@ -224,7 +226,7 @@ if Decision2 == 'Black-Scholes-Merton':
 
 else:
     Options_Analysis = Options_Analysis.query('`Absolute Binomial Error Percentage` < 25')
-    bar_chart = create_grouped_bar_chart(Options_Analysis, 'Strike', 'Actual Price', 'Binomial Model', 'BSM vs Actual Price')
+    bar_chart = create_grouped_bar_chart(Options_Analysis, 'Strike', 'Actual Price', 'Binomial Model', 'Binomial Model vs Actual Price')
     bar_chart2 = create_bar_chart(Options_Analysis, 'Strike', 'Absolute Binomial Error Percentage')
     MSE = np.square(np.subtract(Options_Analysis['Actual Price'],Options_Analysis['Binomial Model'])).mean()
     
