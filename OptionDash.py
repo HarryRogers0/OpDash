@@ -161,7 +161,7 @@ calls = calls.rename(columns = {"bid" : "Bid", "ask": "Ask", "impliedVolatility"
 puts = puts.rename(columns = {"bid" : "Bid", "ask": "Ask", "impliedVolatility" : "IV", "inTheMoney" : "ITM", "openInterest" : "Open Interest"})
 
 st.write(f'## Option Chain for {ticker} - Expiry: {expiry}')
-
+st.warning("Due to using yfinance API, sometimes data outside market hours is inconsistent.")
 # Displays Option Chains
 col1,col2 = st.columns(2)
 col1.write("Call Option Chain")
