@@ -141,6 +141,17 @@ def get_current_price(Symbol):
 
 st.title("Options Analysis Dashboard")
 st.write("A Basic Dashboard that when given a Ticker and American Option Expiry will calculate the Black-Scholes-Merton price of the option as well as the binomial tree price.")
+with st.expander("**How To Use** :rocket:"):
+    st.markdown("""
+                1. Ensure a valid ticker symbol is selected, and is the same as used on yahoo finance.
+                2. Enter an expiry (0dte expiry not supported)
+                3. Select Put / Call
+                4. Select modelling option
+                5. Enter risk free interest rate (annual %)
+                6. Enter binomial tree steps (normally converges after 250)
+                7. View the analysis! 
+    """)
+    st.warning("Dashboard uses yFinance to fetch live data, and therefore cannot generate data outside of market hours.")
 ticker = st.text_input("ticker", value = "SPY")
 Symbol = yf.Ticker(ticker)
 # Download historical data in order to find volatility
@@ -161,7 +172,6 @@ calls = calls.rename(columns = {"bid" : "Bid", "ask": "Ask", "impliedVolatility"
 puts = puts.rename(columns = {"bid" : "Bid", "ask": "Ask", "impliedVolatility" : "IV", "inTheMoney" : "ITM", "openInterest" : "Open Interest"})
 
 st.write(f'## Option Chain for {ticker} - Expiry: {expiry}')
-st.warning("Due to using yfinance API, sometimes data outside market hours is inconsistent.")
 # Displays Option Chains
 col1,col2 = st.columns(2)
 col1.write("Call Option Chain")
