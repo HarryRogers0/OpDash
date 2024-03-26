@@ -135,8 +135,17 @@ def put_payoff(S, K):
 
 
 def get_current_price(Symbol):
+    # Fetch today's data
     todays_data = Symbol.history(period='1d')
-    return todays_data['Close'][0]
+    
+    # Check if the closing price is available (not 0)
+    if todays_data['Close'][0] != 0:
+        return todays_data['Close'][0]
+    else:
+        # Fetch data for the previous day if today's close is 0
+        yesterdays_data = Symbol.history(period='2d')
+        # Return the first entry, assuming it's the most recent one after today
+        return yesterdays_data['Close'][0]
 
 
 st.title("Options Analysis Dashboard")
